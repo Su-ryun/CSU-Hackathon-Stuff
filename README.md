@@ -1,3 +1,30 @@
+# Learned a new body of study.
+
+eye odometry
+pupil(?) odometry
+
+# The belows are the links I've used.
+
+https://developers.google.com/ar/develop/java/cloud-anchors/quickstart-android
+
+https://developers.google.com/ar/reference/java/sceneform/reference/com/google/ar/sceneform/ux/ArFragment
+
+https://developers.google.com/ar/develop/java/sceneform
+
+https://developers.google.com/ar/reference/java/arcore/reference/com/google/ar/core/Session#hostCloudAnchor(com.google.ar.core.Anchor)
+
+https://stackoverflow.com/questions/26488840/where-to-put-png-files-and-how-to-refer-to-them-from-imageview-in-xml-layout
+
+https://stackoverflow.com/questions/5576822/change-background-of-linearlayout-in-android
+
+https://stackoverflow.com/questions/8969122/right-align-text-in-android-textview
+
+https://stackoverflow.com/questions/13264794/font-size-of-textview-in-android-application-changes-on-changing-font-size-from
+
+https://stackoverflow.com/questions/9290651/make-a-hyperlink-textview-in-android
+
+### The below was the backbone of this project.
+
 # ARCoreCloudAnchors
 
 <img src="https://i1.wp.com/androidcommunity.com/wp-content/uploads/2018/05/cloud-anchors.png?resize=696%2C383&ssl=1" height="250" width="500">
