@@ -20,10 +20,13 @@ import com.google.ar.core.HitResult
 import com.google.ar.core.Plane
 import com.google.ar.sceneform.AnchorNode
 import com.google.ar.sceneform.Scene
+import com.google.ar.sceneform.rendering.ModelRenderable
+import com.google.ar.sceneform.rendering.Renderable
 import com.google.ar.sceneform.rendering.ViewRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
 import kotlinx.android.synthetic.main.activity_arcore.*
+import java.util.concurrent.CompletableFuture
 
 
 class ArCoreActivity : AppCompatActivity() {
@@ -34,11 +37,8 @@ class ArCoreActivity : AppCompatActivity() {
 
     private var arCoreFragment: ArCoreFragment? = null
     private var firebaseDatabaseManager: FirebaseDatabaseManager? = null
-
-    private var viewRenderableFactory: ViewRenderable? = null
     private var manualShortCode = 99;
 
-    //    The AppAnchorState will contain the status of the cloudAnchor
     private enum class AppAnchorState {
         NONE,
         HOSTING,
@@ -62,11 +62,8 @@ class ArCoreActivity : AppCompatActivity() {
         initListeners()
     }
 
-    //    This method is responsible for setting listeners on clear and resolve buttons.
-//    It also sets the TapArPlaneListener on ArCoreFragment and hides plane discovery controller to disable the hand gesture (optional)
     private fun initListeners() {
         clear_button.setOnClickListener {
-            //            Set Cloud Anchor to null
             setCloudAnchor(null)
         }
 
@@ -85,7 +82,6 @@ class ArCoreActivity : AppCompatActivity() {
         })
 
 
-//      When an upward facing plane is tapped, we create an Anchor and pass it to setCloudAnchor function
         arCoreFragment?.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane, _: MotionEvent ->
             var userInputView = layoutInflater.inflate(R.layout.user_input, null) as EditText;
             val dialog = AlertDialog.Builder(this)
@@ -116,19 +112,16 @@ class ArCoreActivity : AppCompatActivity() {
                 setCloudAnchor(resolvedAnchor)
                 showMessage("Now Resolving Anchor...")
                 arCoreFragment?.let { placeObject(it, cloudAnchor, manualShortCode) }
-                arCoreFragment?.let { addNodeToScene(it, cloudAnchor) }
                 appAnchorState = AppAnchorState.RESOLVING
             }
 
         })
     }
 
-    //    This method shows some messages to the users using Toast
     fun showMessage(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
-    //    This method sets a new Cloud Anchor and ensures there is only one cloud anchor at any point of time
     private fun setCloudAnchor(newAnchor: Anchor?) {
         if (cloudAnchor != null) {
             cloudAnchor?.detach()
@@ -138,7 +131,6 @@ class ArCoreActivity : AppCompatActivity() {
         appAnchorState = AppAnchorState.NONE
     }
 
-    //    This method checks the anchor state and update it if necessary
     @Synchronized
     private fun updateAnchorIfNecessary() {
         if (appAnchorState != AppAnchorState.HOSTING && appAnchorState != AppAnchorState.RESOLVING) {
@@ -200,39 +192,34 @@ class ArCoreActivity : AppCompatActivity() {
         ).show()
     }
 
-    //      This method builds the model using ModelRenderable class.
-//      It creates the ModelRenderable by setting the source that will load the model.
-//        - thenAccept() is a method that will be called if the model will be successfully loaded and will return the built model.
-//        -  exceptionally() method will be called if the model will not be created.
     private fun placeObject(fragment: ArFragment, anchor: Anchor?, stageNumber: Int) {
-        if (stageNumber == 1){
-            var bottleStationView = layoutInflater.inflate(R.layout.bottle_station, null);
-            var future = ViewRenderable.builder()
-                .setView(this, bottleStationView)
-                .build();
-            future.thenAccept{renderable -> viewRenderableFactory = renderable};
-        } else if(stageNumber == 2){
-            var future = ViewRenderable.builder()
-                .setView(this, layoutInflater.inflate(R.layout.texture_wall, null))
-                .build();
-            future.thenAccept{renderable -> viewRenderableFactory = renderable};
+        var view: View?;
+        if(stageNumber == 1) {
+           view = layoutInflater.inflate(R.layout.bottle_station, null);
+        } else if (stageNumber == 2){
+           view = layoutInflater.inflate(R.layout.texture_wall, null);
         } else {
-            Log.i("dhl", "Fall through.");
+            view = layoutInflater.inflate(R.layout.bottle_station, null);
         }
+        ViewRenderable.builder()
+            .setView(fragment.context, view)
+            .build()
+            .thenAccept { renderable -> addNodeToScene(fragment, anchor, renderable) }
+            .exceptionally { throwable ->
+                val builder = android.app.AlertDialog.Builder(this)
+                builder.setMessage(throwable.message)
+                    .setTitle("Error!")
+                val dialog = builder.create()
+                dialog.show()
+                null
+            }
     }
 
-    //    This function is responsible for adding the node to scene.
-//    It creates an AnchorNode on the Anchor and a TransformableNode with the parent as AnchorNode.
-//    - An Anchor describes a fixed location and orientation in the real world
-//    - An AnchorNode is the first node that gets set when the plane is detected
-//    - The Scene is the space where 3D object will be placed.
-//    - TransformableNode is a node that can be interacted with. It can be moved around, scaled, rotated and much more.
-//    - HitResult can be seen as an infinite imaginary line that gives the point of intersection of itself and the real world.
-    private fun addNodeToScene(fragment: ArFragment, anchor: Anchor?) {
+    private fun addNodeToScene(fragment: ArFragment, anchor: Anchor?, renderable: Renderable) {
         val anchorNode = AnchorNode(anchor)
         val node = TransformableNode(fragment.transformationSystem)
         node.setParent(anchorNode)
-        node.renderable = viewRenderableFactory;
+        node.renderable = renderable;
         fragment.arSceneView.scene.addChild(anchorNode)
         node.select()
     }
