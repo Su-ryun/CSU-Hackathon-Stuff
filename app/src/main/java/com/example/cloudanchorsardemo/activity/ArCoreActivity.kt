@@ -99,7 +99,6 @@ class ArCoreActivity : AppCompatActivity() {
                     } else if (manualShortCode == 2) {
                         arCoreFragment?.let { placeObject(it, textureCloudAnchor, manualShortCode) }
                     }
-//                    arCoreFragment?.let { placeObject(it, cloudAnchor, manualShortCode) }
                 })
                 .setNegativeButton("Cancel", null)
                 .create()
@@ -110,16 +109,20 @@ class ArCoreActivity : AppCompatActivity() {
     }
 
     fun resolveAnchor(dialogValue: String) {
+
         val shortCode = Integer.parseInt(dialogValue)
+
         firebaseDatabaseManager?.getCloudAnchorID(shortCode, object :
             FirebaseDatabaseManager.CloudAnchorIdListener {
             override fun onCloudAnchorIdAvailable(cloudAnchorId: String?) {
+
                 val resolvedAnchor = arCoreFragment?.arSceneView?.session?.resolveCloudAnchor(cloudAnchorId)
                 setCloudAnchor(resolvedAnchor, shortCode)
                 showMessage("Now Resolving Anchor...")
-                if(manualShortCode == 1) {
+
+                if(shortCode == 1) {
                     arCoreFragment?.let { placeObject(it, bottleCloudAnchor, shortCode) }
-                } else if (manualShortCode == 2) {
+                } else if (shortCode == 2) {
                     arCoreFragment?.let { placeObject(it, textureCloudAnchor, shortCode) }
                 }
 //                arCoreFragment?.let { placeObject(it, cloudAnchor, manualShortCode) }
@@ -127,6 +130,7 @@ class ArCoreActivity : AppCompatActivity() {
             }
 
         })
+
     }
 
     fun showMessage(message: String) {
@@ -139,10 +143,10 @@ class ArCoreActivity : AppCompatActivity() {
         }
 
         if (manualShortCode == 1) {
-            bottleCloudAnchor?.detach()
+//            bottleCloudAnchor?.detach()
             bottleCloudAnchor = newAnchor
         } else if (manualShortCode == 2) {
-            textureCloudAnchor?.detach();
+//            textureCloudAnchor?.detach();
             textureCloudAnchor = newAnchor;
         }
 
