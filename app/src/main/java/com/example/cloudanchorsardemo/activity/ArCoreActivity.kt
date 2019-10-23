@@ -31,8 +31,10 @@ import java.util.concurrent.CompletableFuture
 
 class ArCoreActivity : AppCompatActivity() {
 
-    //    Declare a CloudAnchor and an AppAnchorState
+    // Declare a CloudAnchor and an AppAnchorState
     private var cloudAnchor: Anchor? = null
+    private var bottleCloudAnchor: Anchor? = null
+    private var textureCloudAnchor: Anchor? = null
     private var appAnchorState = AppAnchorState.NONE
 
     private var arCoreFragment: ArCoreFragment? = null
@@ -64,7 +66,7 @@ class ArCoreActivity : AppCompatActivity() {
 
     private fun initListeners() {
         clear_button.setOnClickListener {
-            setCloudAnchor(null)
+            setCloudAnchor(null, 99)
         }
 
         resolve_button.setOnClickListener(View.OnClickListener {
@@ -84,16 +86,20 @@ class ArCoreActivity : AppCompatActivity() {
 
         arCoreFragment?.setOnTapArPlaneListener { hitResult: HitResult, plane: Plane, _: MotionEvent ->
             var userInputView = layoutInflater.inflate(R.layout.user_input, null) as EditText;
-            val dialog = AlertDialog.Builder(this)
+            AlertDialog.Builder(this)
                 .setView(userInputView)
                 .setPositiveButton("Add", DialogInterface.OnClickListener { dialog, which ->
                     manualShortCode = Integer.parseInt(userInputView.text.toString());
                     val newAnchor = arCoreFragment?.arSceneView?.session?.hostCloudAnchor(hitResult.createAnchor())
-                    setCloudAnchor(newAnchor)
+                    setCloudAnchor(newAnchor, manualShortCode)
                     appAnchorState = AppAnchorState.HOSTING
                     Toast.makeText(this, "Now hosting anchor...", Toast.LENGTH_LONG).show()
-
-                    arCoreFragment?.let { placeObject(it, cloudAnchor, manualShortCode) }
+                    if(manualShortCode == 1) {
+                        arCoreFragment?.let { placeObject(it, bottleCloudAnchor, manualShortCode) }
+                    } else if (manualShortCode == 2) {
+                        arCoreFragment?.let { placeObject(it, textureCloudAnchor, manualShortCode) }
+                    }
+//                    arCoreFragment?.let { placeObject(it, cloudAnchor, manualShortCode) }
                 })
                 .setNegativeButton("Cancel", null)
                 .create()
@@ -109,9 +115,14 @@ class ArCoreActivity : AppCompatActivity() {
             FirebaseDatabaseManager.CloudAnchorIdListener {
             override fun onCloudAnchorIdAvailable(cloudAnchorId: String?) {
                 val resolvedAnchor = arCoreFragment?.arSceneView?.session?.resolveCloudAnchor(cloudAnchorId)
-                setCloudAnchor(resolvedAnchor)
+                setCloudAnchor(resolvedAnchor, shortCode)
                 showMessage("Now Resolving Anchor...")
-                arCoreFragment?.let { placeObject(it, cloudAnchor, manualShortCode) }
+                if(manualShortCode == 1) {
+                    arCoreFragment?.let { placeObject(it, bottleCloudAnchor, shortCode) }
+                } else if (manualShortCode == 2) {
+                    arCoreFragment?.let { placeObject(it, textureCloudAnchor, shortCode) }
+                }
+//                arCoreFragment?.let { placeObject(it, cloudAnchor, manualShortCode) }
                 appAnchorState = AppAnchorState.RESOLVING
             }
 
@@ -122,9 +133,17 @@ class ArCoreActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
-    private fun setCloudAnchor(newAnchor: Anchor?) {
+    private fun setCloudAnchor(newAnchor: Anchor?, manualShortCode: Int) {
         if (cloudAnchor != null) {
             cloudAnchor?.detach()
+        }
+
+        if (manualShortCode == 1) {
+            bottleCloudAnchor?.detach()
+            bottleCloudAnchor = newAnchor
+        } else if (manualShortCode == 2) {
+            textureCloudAnchor?.detach();
+            textureCloudAnchor = newAnchor;
         }
 
         cloudAnchor = newAnchor
