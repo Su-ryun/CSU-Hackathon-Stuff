@@ -243,7 +243,8 @@ class ArCoreActivity : AppCompatActivity() {
         val node = TransformableNode(fragment.transformationSystem)
         node.setParent(anchorNode)
         node.renderable = renderable;
-        fragment.arSceneView.scene.addChild(anchorNode)
+        // Long as the node is not being detached, I can keep adding childs to the ARFragment.
+        fragment.arSceneView.scene.addChild(anchorNode);
         node.select()
     }
 }
