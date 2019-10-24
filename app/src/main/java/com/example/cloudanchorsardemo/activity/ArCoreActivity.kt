@@ -119,14 +119,13 @@ class ArCoreActivity : AppCompatActivity() {
             FirebaseDatabaseManager.CloudAnchorIdListener {
             override fun onCloudAnchorIdAvailable(cloudAnchors: Iterable<DataSnapshot>?) {
                 cloudAnchors?.forEach {
-                    Log.i("dhl", it.getValue() as String?); // Why didn't I do this earlier?
-                }
-                val resolvedAnchor = arCoreFragment?.arSceneView?.session?.resolveCloudAnchor("ua-eb6c129adb6be92efa8f56a1361599bb")
-                setCloudAnchor(resolvedAnchor)
-                showMessage("Now Resolving Anchor...")
+                    val resolvedAnchor = arCoreFragment?.arSceneView?.session?.resolveCloudAnchor(it.getValue() as String?)
+                    setCloudAnchor(resolvedAnchor)
+                    showMessage("Now Resolving Anchor...")
 
-                arCoreFragment?.let { placeObject(it, cloudAnchor) }
-                appAnchorState = AppAnchorState.RESOLVING
+                    arCoreFragment?.let { placeObject(it, cloudAnchor) }
+                    appAnchorState = AppAnchorState.RESOLVING
+                }
             }
 
         })
