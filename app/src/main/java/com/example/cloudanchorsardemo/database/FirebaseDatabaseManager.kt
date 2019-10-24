@@ -17,7 +17,7 @@ internal class FirebaseDatabaseManager(context: Context) {
 
     /** Listener for a new Cloud Anchor ID from the Firebase Database.  */
     internal interface CloudAnchorIdListener {
-        fun onCloudAnchorIdAvailable(cloudAnchorId: String?)
+        fun onCloudAnchorIdAvailable(cloudAnchors: Iterable<DataSnapshot>?)
     }
 
     /** Listener for a new short code from the Firebase Database.  */
@@ -71,22 +71,37 @@ internal class FirebaseDatabaseManager(context: Context) {
      * was not stored for this short code.
      */
     fun getCloudAnchorID(shortCode: Int, listener: CloudAnchorIdListener) {
-        rootRef
-            .child(KEY_PREFIX + shortCode)
-            .addListenerForSingleValueEvent(
-                object : ValueEventListener {
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        listener.onCloudAnchorIdAvailable(dataSnapshot.value.toString())
-                    }
+//        rootRef
+//            .child(KEY_PREFIX + shortCode)
+//            .addListenerForSingleValueEvent(
+//                object : ValueEventListener {
+//                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+//                        listener.onCloudAnchorIdAvailable(dataSnapshot.value.toString())
+//                    }
+//
+//                    override fun onCancelled(error: DatabaseError) {
+//                        Log.e(
+//                            TAG, "The database operation for getCloudAnchorID was cancelled.",
+//                            error.toException()
+//                        )
+//                        listener.onCloudAnchorIdAvailable(null)
+//                    }
+//                })
 
-                    override fun onCancelled(error: DatabaseError) {
-                        Log.e(
-                            TAG, "The database operation for getCloudAnchorID was cancelled.",
-                            error.toException()
-                        )
-                        listener.onCloudAnchorIdAvailable(null)
-                    }
-                })
+        rootRef.addValueEventListener(object : ValueEventListener {
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                var children = dataSnapshot.children
+                listener.onCloudAnchorIdAvailable(children);
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                Log.e(
+                    TAG, "The database operation for getCloudAnchorID was cancelled.",
+                    error.toException()
+                )
+                listener.onCloudAnchorIdAvailable(null)
+            }
+        });
     }
 
     companion object {

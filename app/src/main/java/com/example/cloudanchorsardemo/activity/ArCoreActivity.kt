@@ -25,7 +25,9 @@ import com.google.ar.sceneform.rendering.Renderable
 import com.google.ar.sceneform.rendering.ViewRenderable
 import com.google.ar.sceneform.ux.ArFragment
 import com.google.ar.sceneform.ux.TransformableNode
+import com.google.firebase.database.DataSnapshot
 import kotlinx.android.synthetic.main.activity_arcore.*
+import org.json.JSONObject
 import java.util.concurrent.CompletableFuture
 
 
@@ -33,8 +35,6 @@ class ArCoreActivity : AppCompatActivity() {
 
     // Declare a CloudAnchor and an AppAnchorState
     private var cloudAnchor: Anchor? = null
-    private var bottleCloudAnchor: Anchor? = null
-    private var textureCloudAnchor: Anchor? = null
     private var appAnchorState = AppAnchorState.NONE
 
     private var arCoreFragment: ArCoreFragment? = null
@@ -65,8 +65,12 @@ class ArCoreActivity : AppCompatActivity() {
     }
 
     private fun initListeners() {
+        save_button.setOnClickListener {
+            saveAnchors();
+        }
+
         clear_button.setOnClickListener {
-            setCloudAnchor(null, 99)
+            setCloudAnchor(null)
         }
 
         resolve_button.setOnClickListener(View.OnClickListener {
@@ -91,41 +95,37 @@ class ArCoreActivity : AppCompatActivity() {
                 .setPositiveButton("Add", DialogInterface.OnClickListener { dialog, which ->
                     manualShortCode = Integer.parseInt(userInputView.text.toString());
                     val newAnchor = arCoreFragment?.arSceneView?.session?.hostCloudAnchor(hitResult.createAnchor())
-                    setCloudAnchor(newAnchor, manualShortCode)
+                    setCloudAnchor(newAnchor)
                     appAnchorState = AppAnchorState.HOSTING
                     Toast.makeText(this, "Now hosting anchor...", Toast.LENGTH_LONG).show()
-                    if(manualShortCode == 1) {
-                        arCoreFragment?.let { placeObject(it, bottleCloudAnchor, manualShortCode) }
-                    } else if (manualShortCode == 2) {
-                        arCoreFragment?.let { placeObject(it, textureCloudAnchor, manualShortCode) }
-                    }
+                    arCoreFragment?.let { placeObject(it, newAnchor) }
                 })
                 .setNegativeButton("Cancel", null)
                 .create()
                 .show();
-            if (plane.type != Plane.Type.HORIZONTAL_UPWARD_FACING || appAnchorState != AppAnchorState.NONE) {
-            }
+            if (plane.type != Plane.Type.HORIZONTAL_UPWARD_FACING || appAnchorState != AppAnchorState.NONE) {}
         }
     }
 
+    fun saveAnchors() {
+
+    }
+// I have to reimplement this so that it fetches all the id.
     fun resolveAnchor(dialogValue: String) {
 
         val shortCode = Integer.parseInt(dialogValue)
 
         firebaseDatabaseManager?.getCloudAnchorID(shortCode, object :
             FirebaseDatabaseManager.CloudAnchorIdListener {
-            override fun onCloudAnchorIdAvailable(cloudAnchorId: String?) {
-
-                val resolvedAnchor = arCoreFragment?.arSceneView?.session?.resolveCloudAnchor(cloudAnchorId)
-                setCloudAnchor(resolvedAnchor, shortCode)
+            override fun onCloudAnchorIdAvailable(cloudAnchors: Iterable<DataSnapshot>?) {
+                cloudAnchors?.forEach {
+                    Log.i("dhl", it.getValue() as String?); // Why didn't I do this earlier?
+                }
+                val resolvedAnchor = arCoreFragment?.arSceneView?.session?.resolveCloudAnchor("ua-eb6c129adb6be92efa8f56a1361599bb")
+                setCloudAnchor(resolvedAnchor)
                 showMessage("Now Resolving Anchor...")
 
-                if(shortCode == 1) {
-                    arCoreFragment?.let { placeObject(it, bottleCloudAnchor, shortCode) }
-                } else if (shortCode == 2) {
-                    arCoreFragment?.let { placeObject(it, textureCloudAnchor, shortCode) }
-                }
-//                arCoreFragment?.let { placeObject(it, cloudAnchor, manualShortCode) }
+                arCoreFragment?.let { placeObject(it, cloudAnchor) }
                 appAnchorState = AppAnchorState.RESOLVING
             }
 
@@ -137,19 +137,21 @@ class ArCoreActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
-    private fun setCloudAnchor(newAnchor: Anchor?, manualShortCode: Int) {
-        if (cloudAnchor != null) {
-            cloudAnchor?.detach()
-        }
-
-        if (manualShortCode == 1) {
-//            bottleCloudAnchor?.detach()
-            bottleCloudAnchor = newAnchor
-        } else if (manualShortCode == 2) {
-//            textureCloudAnchor?.detach();
-            textureCloudAnchor = newAnchor;
-        }
-
+    private fun setCloudAnchor(newAnchor: Anchor?) {
+// Because of some synchronicity, the below codebase fails: java.util.ConcurrentModificationException
+// And when I am trying to remove a node with without the for loop, the ScenView gets destroyed (I think), leaving the screen entirely black.
+//        if(newAnchor == null) {
+//            var parent = arCoreFragment?.arSceneView?.scene
+//            // There must be a cleaner way to write those two below ...
+//            var children = parent?.children
+//            if (parent != null && children != null) {
+//                // Detaches all the renderables.
+//                for(node in children) {
+//                    node.isEnabled = false
+//                    parent.removeChild(node)
+//                }
+//            }
+//        }
         cloudAnchor = newAnchor
         appAnchorState = AppAnchorState.NONE
     }
@@ -167,23 +169,30 @@ class ArCoreActivity : AppCompatActivity() {
 
                     appAnchorState = AppAnchorState.NONE
                 } else if (it == Anchor.CloudAnchorState.SUCCESS) {
-                    firebaseDatabaseManager?.nextShortCode(object :
-                        FirebaseDatabaseManager.ShortCodeListener {
-                        override fun onShortCodeAvailable(shortCode: Int?) {
-                            if (shortCode == null) {
-                                showMessage("Could not get shortCode")
-                                return
-                            }
-                            cloudAnchor?.let {
-                                firebaseDatabaseManager?.storeUsingShortCode(
-                                    manualShortCode,
-                                    it.cloudAnchorId
-                                )
-                            }
-                            showMessageWitAnchorId("Anchor hosted with: " + manualShortCode)
-                        }
-
-                    })
+//                    firebaseDatabaseManager?.nextShortCode(object :
+//                        FirebaseDatabaseManager.ShortCodeListener {
+//                        override fun onShortCodeAvailable(shortCode: Int?) {
+//                            if (shortCode == null) {
+//                                showMessage("Could not get shortCode")
+//                                return
+//                            }
+//                            // This is where the short code gets stored in Firebase.
+//                            cloudAnchor?.let {
+//                                firebaseDatabaseManager?.storeUsingShortCode(
+//                                    manualShortCode,
+//                                    it.cloudAnchorId
+//                                )
+//                            }
+//                            showMessageWitAnchorId("Anchor hosted with: " + manualShortCode)
+//                        }
+//
+//                    })
+                    cloudAnchor?.let {
+                        firebaseDatabaseManager?.storeUsingShortCode(
+                            manualShortCode,
+                            it.cloudAnchorId
+                        )
+                    }
                     appAnchorState = AppAnchorState.HOSTED
                 }
             } else if (appAnchorState == AppAnchorState.RESOLVING) {
@@ -215,15 +224,8 @@ class ArCoreActivity : AppCompatActivity() {
         ).show()
     }
 
-    private fun placeObject(fragment: ArFragment, anchor: Anchor?, stageNumber: Int) {
-        var view: View?;
-        if(stageNumber == 1) {
-           view = layoutInflater.inflate(R.layout.bottle_station, null);
-        } else if (stageNumber == 2){
-           view = layoutInflater.inflate(R.layout.texture_wall, null);
-        } else {
-            view = layoutInflater.inflate(R.layout.bottle_station, null);
-        }
+    private fun placeObject(fragment: ArFragment, anchor: Anchor?) {
+        var view = layoutInflater.inflate(R.layout.bottle_station, null);
         ViewRenderable.builder()
             .setView(fragment.context, view)
             .build()
