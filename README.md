@@ -1,4 +1,4 @@
-# Learned new bodies of studies.
+# Learned new parent concepts.
 
 eye odometry
 
