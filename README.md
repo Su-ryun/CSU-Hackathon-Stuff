@@ -1,4 +1,4 @@
-# Learned a new body of study.
+# Learned new bodies of studies.
 
 eye odometry
 
