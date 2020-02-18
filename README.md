@@ -24,6 +24,10 @@ https://stackoverflow.com/questions/13264794/font-size-of-textview-in-android-ap
 
 https://stackoverflow.com/questions/9290651/make-a-hyperlink-textview-in-android
 
+# In case if they've decided not to archive the winners.
+
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/IWonSomething.png" height="300" width="500">
+
 ### The below was the backbone of this project.
 
 # https://github.com/zipper-studios/ARCoreCloudAnchors
