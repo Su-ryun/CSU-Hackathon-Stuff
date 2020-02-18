@@ -28,7 +28,7 @@ https://stackoverflow.com/questions/9290651/make-a-hyperlink-textview-in-android
 
 <img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/IWonSomething.png" height="300" width="500">
 
-Q: I see 5, why am I only seeing your commits?
+Q: I see 5. Why am I only seeing your commits in this repo? <br/>
 A: The Unity portion of this project kinda broke, and I was the only Andy code monkey.
 
 ### The below was the backbone of this project.
