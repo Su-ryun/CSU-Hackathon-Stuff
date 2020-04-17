@@ -31,6 +31,10 @@ https://stackoverflow.com/questions/9290651/make-a-hyperlink-textview-in-android
 Q: I see 5. Why am I only seeing your commits in this repo? <br/>
 A: The Unity portion of this project kinda broke, and I was the only Andy code monkey.
 
+### Since, I got rid of the Firebase database and other API keys related to this project, there is no way of running this app. Nonetheless, the app behaved like the below:
+https://github.com/dlee67/FifthPracticeBucket/tree/master/GMapStuff/PaulTuts
+
+
 ### The below was the backbone of this project.
 
 # https://github.com/zipper-studios/ARCoreCloudAnchors
