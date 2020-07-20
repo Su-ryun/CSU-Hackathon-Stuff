@@ -7,15 +7,13 @@ A: The Unity portion of this project kinda broke, and I was the only Andy code m
 
 ### Since, I got rid of the Firebase database and other API keys related to this project, there is no way of running this app. So, here are the pictures:
 
-This is the first thing the users will see when they open the app. <br/>
-<div style="text-align:center">        
-<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/1.png" height="500" width="300"> </div> <br/><br/>
+This is the first thing the users will see when they open the app. <br/>        
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/1.png" height="500" width="300"> <br/><br/>
 
 Essentially, you can use the app to place augmented reality objects
 around the world (literally) to have them persist for 24 hours
 (Google working on ARCore to make cloud anchors persist permanently).
-<div style="text-align:center">
-<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/2.png" height="500" width="300"></div><br/><br/>
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/2.png" height="500" width="300"><br/><br/>
 
 After the hackathon was over, one of the judge came over to us and said,
 "we are currently thinking about creating an AR tour across our campus."
@@ -24,21 +22,17 @@ the AR objects in anyway; <br/><br/>
 
 therefore, I've decided to extend what I have, so the users can at least
 put descriptions on'em.
-<div style="text-align:center">
-<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/3.png" height="500" width="300"> </div>
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/3.png" height="500" width="300">
 
-<div style="text-align:center">
-<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/4.png" height="500" width="300"> </div>
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/4.png" height="500" width="300">
 
-<div style="text-align:center">
-<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/5.png" height="500" width="300"></div> <br/><br/>
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/5.png" height="500" width="300"> <br/><br/>
 
 As the API suggests, those AR objects are being persisted (as alphanumeric)
 in the cloud service (Firebase). Since, I've created the anchor just now
 with "Aerospace Engineering Building" as its id, I can generate the
 same object I've created in front of me.<br>
-<div style="text-align:center">
-<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/6.png" height="500" width="300"> </div>
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/6.png" height="500" width="300">
  
 # Learned new parent concepts.
 
