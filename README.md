@@ -1,3 +1,41 @@
+# In case if they've decided not to archive the winners.
+
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/IWonSomething.png" height="300" width="500">
+
+Q: I see 5. Why am I only seeing your commits in this repo? <br/>
+A: The Unity portion of this project kinda broke, and I was the only Andy code monkey.
+
+### Since, I got rid of the Firebase database and other API keys related to this project, there is no way of running this app. So, here are the pictures:
+
+This is the first thing the users will see when they open the app.
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/1.png" height="300" width="500"> <br/><br/>
+
+Essentially, you can use the app to place augmented reality objects
+around the world (literally) to have them persist for 24 hours
+(last time I've heard, Google is currently experimenting with ARCore
+to make cloud anchors persist permanently).
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/2.png" height="300" width="500"><br/><br/>
+
+After the hackathon was over, one of the judge came over to us and said,
+"we are currently thinking about creating an AR tour across our campus."
+<br/>
+During the hackathon, the AR objects were static, you couldn't customize
+the AR objects in anyway; <br/><br/>
+
+therefore, I've decided to extend what I have, so the users can at least
+put descriptions on'em.
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/3.png" height="300" width="500">
+
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/4.png" height="300" width="500">
+
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/5.png" height="300" width="500"> <br/><br/>
+
+As the API suggests, those AR objects are being persisted (as alphanumeric)
+in the cloud service (Firebase). Since, I've created the anchor just now
+with "Aerospace Engineering Building" as its id, I can generate the
+same object I've created in front of me.
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/6.png" height="300" width="500">
+ 
 # Learned new parent concepts.
 
 eye odometry
@@ -24,17 +62,6 @@ https://stackoverflow.com/questions/13264794/font-size-of-textview-in-android-ap
 
 https://stackoverflow.com/questions/9290651/make-a-hyperlink-textview-in-android
 
-# In case if they've decided not to archive the winners.
-
-<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/IWonSomething.png" height="300" width="500">
-
-Q: I see 5. Why am I only seeing your commits in this repo? <br/>
-A: The Unity portion of this project kinda broke, and I was the only Andy code monkey.
-
-### Since, I got rid of the Firebase database and other API keys related to this project, there is no way of running this app. Nonetheless, the app behaved like the below:
-https://github.com/dlee67/FifthPracticeBucket/tree/master/GMapStuff/PaulTuts
-
-
 ### The below was the backbone of this project.
 
 # https://github.com/zipper-studios/ARCoreCloudAnchors
@@ -43,7 +70,7 @@ https://github.com/dlee67/FifthPracticeBucket/tree/master/GMapStuff/PaulTuts
 
 <img src="https://i1.wp.com/androidcommunity.com/wp-content/uploads/2018/05/cloud-anchors.png?resize=696%2C383&ssl=1" height="250" width="500">
 
-This app is based on Augmented Reality technology and uses ARCore Cloud Anchors to create multiplayer or collaborative AR experiences that Android and IOS users can share. A step-by-step guide to create this app is available on our article on [Medium](https://medium.com/p/16929723f693/edit "AR technology for Android - Part 4 : AR Cloud Anchors"), where you will learn how to host and resolve a Cloud Anchor as Android developer. 
+This app is based on Augmented Reality technology and uses ARCore Cloud Anchors to create multiplayer or collaborative AR experiences that Android and IOS users can share. A step-by-step guide to create this app is available on our article on [Medium](https://medium.com/p/16929723f693/edit "AR technology for Android - Part 4 : AR Cloud Anchors"), where you will learn how to host and resolve a Cloud Anchor as Android developer.
 
 ## Running 
 To use Cloud Anchors, you'll need to add an API Key to your app for authentication with the ARCore Cloud Anchor Service. Follow [Steps 1 and 2](https://developers.google.com/ar/develop/java/cloud-anchors/quickstart-android#add_an_api_key) from these instructions to get an API Key.
