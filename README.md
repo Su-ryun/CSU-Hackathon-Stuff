@@ -1,6 +1,6 @@
 # In case if they've decided not to archive the winners.
 
-<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/IWonSomething.png" height="500" width="300">
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/IWonSomething.png" height="300" width="500">
 
 Q: I see 5. Why am I only seeing your commits in this repo? <br/>
 A: The Unity portion of this project kinda broke, and I was the only Andy code monkey.
