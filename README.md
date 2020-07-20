@@ -17,13 +17,12 @@ around the world (literally) to have them persist for 24 hours
 
 After the hackathon was over, one of the judge came over to us and said,
 "we are currently thinking about creating an AR tour across our campus."
-<br/>
 During the hackathon, the AR objects were static, you couldn't customize
 the AR objects in anyway; <br/><br/>
 
 therefore, I've decided to extend what I have, so the users can at least
 put descriptions on'em.
-<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/3.png" height="500" width="300">
+<img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/3.png" height="500" width="300" style="text-align:center">
 
 <img src="https://github.com/dlee67/CSU-Hackathon-Stuff/blob/master/images/4.png" height="500" width="300">
 
